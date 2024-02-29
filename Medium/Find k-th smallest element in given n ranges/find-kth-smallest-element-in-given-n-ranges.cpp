@@ -10,25 +10,40 @@ using namespace std;
 class Solution{
     public:
     vector<int>kthSmallestNum(int n, vector<vector<int>>&range, int q, vector<int>queries){
-         vector<int>ans;
         sort(range.begin(),range.end());
-        for (int qq=0;qq<q;qq++)
+        int low=range[0][0];
+        int high=range[0][1];
+        vector<vector<int>> modified_range;
+        for(int i=1;i<n;i++)
         {
-            int k = queries[qq],till=0,check=0;
-            for (int i=0;i<n;i++)
+            if(range[i][0]<=high)
             {
-                if (max(range[i][0]-1,till)+k<=range[i][1])
+                high=max(high,range[i][1]);
+            }
+            else
+            {
+                modified_range.push_back({low,high});
+                low=range[i][0],high=range[i][1];
+            }
+        }
+        modified_range.push_back({low,high});
+        vector<int> res;
+        for(int i=0;i<q;i++)
+        {
+            int sz=0,f=0;
+            for(auto it:modified_range)
+            {
+                sz+=it[1]-it[0]+1;
+                if(sz>=queries[i])
                 {
-                    ans.push_back(max(range[i][0]-1,till)+k);
-                    check=1;
+                    res.push_back(it[1]-sz+queries[i]);
+                    f=1;
                     break;
                 }
-                k-=max(range[i][1],till)-max(range[i][0]-1,till);
-                till = max(till,range[i][1]);
             }
-            if (!check) ans.push_back(-1);
+            if(!f) res.push_back(-1);
         }
-        return ans;
+        return res;
 
     } 
 };
