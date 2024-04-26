@@ -7,27 +7,30 @@ class Solution{
     public:
     long long int maximizeSum(long long int a[], int n, int k)
     {
-        // Your code goes here
+         long long int sum=0;
         sort(a,a+n);
-        long long int sum=0;
-            for(int i=0;i<n&&k>0&&a[i]<0;i++){
-                a[i]*=-1;
+        for(int i=0;i<n;i++)
+        {
+            if( k>0 && a[i]<0)
+            { 
+                a[i]=-a[i];
+                sum+=a[i];
                 k--;
             }
-        if(k%2!=0){
-            int m=INT_MAX,idx=0;
-            for(int i=0;i<n;i++){
-                if(a[i]<m){
-                    m=a[i];
-                    idx=i;
-                }
+            else 
+            {
+                sum+=a[i];
             }
-            a[idx]*=-1;
         }
-        for(int i=0;i<n;i++){
-            sum+=a[i];
-        }
+        if(k%2==0) return sum;
+        else
+        {
+            sort(a,a+n);
+            k=k%2;
+            sum-=a[0];
+            sum+=-a[0];
         return sum;
+        }
     }
 };
 
